@@ -110,14 +110,32 @@ function share() {
   const hash = '#p=' + encodeShare({ pattern: state.pattern, tempo: state.tempo, kit: state.kit });
   const url = location.origin + location.pathname + hash;
   history.replaceState(null, '', hash);
-  const done = msg => {
-    const n = document.getElementById('sharemsg');
-    n.textContent = msg;
-    setTimeout(() => (n.textContent = ''), 3000);
+  const n = document.getElementById('sharemsg');
+  const done = msg => { n.textContent = msg; };
+  // iOS-friendly order: native share sheet first (viral), then clipboard, then manual select.
+  if (navigator.share) {
+    navigator.share({ title: 'My CWI Beat Lab pattern', url }).then(
+      () => done('Shared — anyone opening it hears YOUR pattern.'),
+      () => done('Share cancelled — link is in the address bar.'));
+    return;
+  }
+  const legacyCopy = () => {
+    const ta = document.createElement('textarea');
+    ta.value = url;
+    ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+    document.body.appendChild(ta);
+    ta.focus(); ta.select();
+    try {
+      const ok = document.execCommand('copy');
+      done(ok ? 'Link copied — anyone opening it hears YOUR pattern.' : 'Copy failed — link is in the address bar.');
+    } catch { done('Link is in the address bar — copy it.'); }
+    document.body.removeChild(ta);
   };
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(url).then(() => done('Link copied — anyone opening it hears YOUR pattern.'), () => done('Link is in the address bar — copy it.'));
-  } else done('Link is in the address bar — copy it.');
+    navigator.clipboard.writeText(url).then(
+      () => done('Link copied — anyone opening it hears YOUR pattern.'),
+      legacyCopy);
+  } else legacyCopy();
 }
 
 window.addEventListener('DOMContentLoaded', () => {
