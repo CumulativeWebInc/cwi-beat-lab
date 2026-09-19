@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CWI Beat Lab — make a beat in 10 seconds</title>
+<meta name="description" content="A free 16-step browser sequencer from Cumulative Web Inc. Tap the squares, press play, share your pattern.">
+<style>
+  :root { --bg:#0d0f1a; --panel:#161a2e; --accent:#ff7a1a; --accent2:#ff4d6d; --text:#eef1ff; --dim:#8b93b8; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family:system-ui,-apple-system,"Segoe UI",sans-serif; }
+  header { padding:20px 20px 8px; text-align:center; }
+  header h1 { margin:0; font-size:28px; letter-spacing:1px; }
+  header h1 .crown { color:var(--accent); }
+  header p { margin:6px 0 0; color:var(--dim); font-size:14px; }
+  .badge { display:inline-block; margin-top:8px; font-size:12px; color:#0d0f1a; background:var(--accent); border-radius:20px; padding:3px 12px; font-weight:700; }
+  #kitlabel, #stemstatus { font-size:12px; color:var(--dim); }
+  #stemstatus { color:#c9a227; }
+  main { max-width:860px; margin:0 auto; padding:12px 16px 40px; }
+  .transport { display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap; margin:14px 0; }
+  button.ctl { background:var(--panel); color:var(--text); border:1px solid #2a3052; border-radius:10px; padding:10px 18px; font-size:15px; cursor:pointer; font-weight:700; }
+  button.ctl:hover { border-color:var(--accent); }
+  button.ctl:disabled { opacity:.45; cursor:not-allowed; }
+  #playbtn { background:var(--accent); color:#0d0f1a; border:none; min-width:120px; }
+  select.ctl { background:var(--panel); color:var(--text); border:1px solid #2a3052; border-radius:10px; padding:10px; font-size:14px; }
+  .tempo { display:flex; align-items:center; gap:8px; color:var(--dim); font-size:14px; }
+  input[type=range] { accent-color:var(--accent); width:140px; }
+  #grid { display:grid; grid-template-columns:64px repeat(16, 1fr); gap:5px; margin:18px 0 8px; }
+  .rowlabel { display:flex; align-items:center; justify-content:flex-end; padding-right:8px; font-size:12px; font-weight:800; color:var(--dim); letter-spacing:1px; }
+  .cell { aspect-ratio:1; border:none; border-radius:6px; background:#232842; cursor:pointer; padding:0; }
+  .cell.beat { background:#2b3358; }
+  .cell.on { background:linear-gradient(180deg,var(--accent),#ff9d4d); box-shadow:0 0 8px rgba(255,122,26,.55); }
+  .cell.playhead { outline:2px solid #fff; }
+  #sharemsg { min-height:20px; text-align:center; color:var(--accent); font-size:13px; margin:6px 0; }
+  .terms { margin-top:26px; background:var(--panel); border:1px solid #2a3052; border-radius:12px; padding:14px 18px; font-size:13px; color:var(--dim); line-height:1.6; }
+  .terms b { color:var(--text); }
+  footer { text-align:center; color:var(--dim); font-size:12px; padding:0 16px 30px; }
+  footer a { color:var(--accent); }
+</style>
+</head>
+<body>
+<header>
+  <h1><span class="crown">♛</span> CWI BEAT LAB</h1>
+  <p>Tap the squares. Press play. Share your pattern.</p>
+  <div><span class="badge">FREE · NO SIGN-UP · RUNS IN YOUR BROWSER</span></div>
+  <p id="kitlabel"></p>
+  <p id="stemstatus"></p>
+</header>
+<main>
+  <div class="transport">
+    <button class="ctl" id="playbtn">▶ PLAY</button>
+    <select class="ctl" id="preset" aria-label="Preset pattern">
+      <option value="boom-bap">Preset: Boom Bap</option>
+      <option value="trap">Preset: Trap</option>
+      <option value="bounce">Preset: Bounce</option>
+      <option value="empty">Preset: Empty</option>
+    </select>
+    <label class="tempo">Tempo <input type="range" id="tempo" min="60" max="200" value="95"> <span id="tempoval">95 BPM</span></label>
+    <button class="ctl" id="clearbtn">CLEAR</button>
+    <button class="ctl" id="sharebtn">🔗 SHARE MY PATTERN</button>
+  </div>
+  <div id="sharemsg" role="status"></div>
+  <div id="grid" role="grid" aria-label="16-step sequencer"></div>
+  <div class="transport">
+    <button class="ctl" id="stembtn" disabled>🥁 LOAD ARTIST STEM PACK</button>
+  </div>
+  <div class="terms">
+    <b>Usage terms (read this, it's short):</b><br>
+    · All drum sounds right now are <b>synthesized live in your browser</b> — no samples, no artist audio.<br>
+    · Beats you make here are <b>free for non-commercial use</b>. Releasing commercially? You need a license: <b>hp@cumulativeweb.com</b>.<br>
+    · The That Boy Hi Hat stem pack loads <b>only after explicit clearance</b> — this lab refuses to load uncleared sounds, by design.<br>
+    · Shared pattern links open this lab with the pattern loaded. Every share links back here.
+  </div>
+</main>
+<footer>
+  Built by <a href="https://cumulativeweb.com">Cumulative Web Inc.</a> · That Boy Hi Hat — Road to 1M.<br>
+  <span id="fresh">Kit: synthesized · observed 2026-09-19 · no external audio fetched, ever.</span>
+</footer>
+<script type="module" src="./app.js"></script>
+</body>
+</html>
