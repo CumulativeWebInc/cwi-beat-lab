@@ -13,14 +13,24 @@ const state = {
 
 let ctx = null, master = null, timer = null, nextTime = 0;
 
+function soundStatus() {
+  const el = document.getElementById('soundstatus');
+  if (!el) return;
+  if (!ctx) { el.textContent = '🔇 sound: tap PLAY'; el.classList.remove('on'); return; }
+  if (ctx.state === 'running') { el.textContent = '🔊 sound on'; el.classList.add('on'); }
+  else { el.textContent = '🔇 sound blocked — tap PLAY, check silent switch & volume'; el.classList.remove('on'); }
+}
+
 function audio() {
   if (!ctx) {
     ctx = new (window.AudioContext || window.webkitAudioContext)();
     master = ctx.createGain();
     master.gain.value = 0.8;
     master.connect(ctx.destination);
+    ctx.onstatechange = soundStatus;
   }
-  if (ctx.state === 'suspended') ctx.resume();
+  if (ctx.state === 'suspended') ctx.resume().then(soundStatus).catch(soundStatus);
+  soundStatus();
   return ctx;
 }
 
