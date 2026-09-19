@@ -156,7 +156,7 @@ function setPlaying(p) {
   }
 }
 
-async function loadStemPack() {
+async function onLoadStemPack() {
   const btn = document.getElementById('stembtn');
   const msg = document.getElementById('sharemsg');
   try {
@@ -247,5 +247,5 @@ window.addEventListener('DOMContentLoaded', () => {
   sb.disabled = false;
   sb.textContent = 'LOAD BHC STEMS';
   sb.title = 'Load the cleared Broken Hearts Club stem pack (drums / bass / vocals / other).';
-  sb.addEventListener('click', loadStemPack);
+  sb.addEventListener('click', onLoadStemPack);
 });
