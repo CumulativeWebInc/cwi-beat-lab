@@ -44,3 +44,11 @@ export async function loadStems(manifest, audioCtx) {
   STEM_STATUS.label = `Artist stem pack — cleared by ${manifest.stems[0].clearedBy} (${manifest.stems[0].clearedAt})`;
   return { id: 'stems', label: STEM_STATUS.label, sounds };
 }
+
+// User-initiated entry point: fetches the manifest, then loadStems.
+// The ONLY network touch in the stem path, and only after an explicit tap.
+export async function loadStemPack(manifestUrl, audioCtx) {
+  const res = await fetch(manifestUrl, { cache: 'no-store' });
+  if (!res.ok) throw new Error('stems: manifest fetch failed — refusing to load');
+  return loadStems(await res.json(), audioCtx);
+}
